@@ -2,658 +2,265 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🏎️ سباق السرعة الاحترافي</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محرر الأكواد أونلاين</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/editor/editor.main.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            touch-action: none;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        body {
-            overflow: hidden;
-            background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%);
-            font-family: 'Arial', sans-serif;
-        }
-
-        #gameCanvas {
-            display: block;
-            width: 100vw;
-            height: 100vh;
-        }
-
-        /* شاشة البداية */
-        #startScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            color: white;
-        }
-
-        #startScreen h1 {
-            font-size: clamp(40px, 12vw, 70px);
-            margin-bottom: 10px;
-            text-shadow: 0 0 40px rgba(255,255,255,0.5);
-            animation: glow 2s ease-in-out infinite;        }
-
-        @keyframes glow {
-            0%, 100% { text-shadow: 0 0 40px rgba(255,255,255,0.5); }
-            50% { text-shadow: 0 0 60px rgba(255,255,255,0.8); }
-        }
-
-        #startScreen p {
-            font-size: 22px;
-            margin: 10px;
-            opacity: 0.9;
-        }
-
-        #startBtn {
-            margin-top: 40px;
-            padding: 25px 70px;
-            font-size: 32px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            border: none;
-            border-radius: 60px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 10px 40px rgba(245,87,108,0.4);
-            transition: transform 0.2s;
-        }
-
-        #startBtn:active {
-            transform: scale(0.95);
-        }
-
-        /* العدادات */
-        #hud {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            right: 10px;
-            display: none;
-            justify-content: space-between;
-            z-index: 1000;
-            pointer-events: none;
-        }
-
-        #speedometer {
-            background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 100%);
-            border: 4px solid #00ff88;
-            border-radius: 50%;
-            width: 130px;
-            height: 130px;
-            display: flex;            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            box-shadow: 0 0 30px rgba(0,255,136,0.5);
-        }
-
-        #speedValue {
-            font-size: 52px;
-            font-weight: bold;
-            color: #00ff88;
-            line-height: 1;
-        }
-
-        #speedLabel {
-            font-size: 18px;
-            color: #fff;
-            margin-top: 5px;
-        }
-
-        #lapCounter {
-            background: rgba(0,0,0,0.8);
-            border: 3px solid #ff0066;
-            border-radius: 20px;
-            padding: 15px 30px;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            box-shadow: 0 0 20px rgba(255,0,102,0.5);
-        }
-
-        /* الخريطة */
-        #minimap {
-            position: fixed;
-            bottom: 170px;
-            right: 10px;
-            width: 160px;
-            height: 130px;
-            background: rgba(0,0,0,0.85);
-            border: 4px solid #00ff88;
-            border-radius: 15px;
-            display: none;
-            z-index: 1000;
-            box-shadow: 0 0 25px rgba(0,255,136,0.4);
-        }
-
-        /* أزرار التحكم */
-        #controls {
-            position: fixed;
-            bottom: 20px;            left: 0;
-            right: 0;
-            display: none;
-            justify-content: space-between;
-            padding: 0 20px;
-            z-index: 1000;
-        }
-
-        .steeringGroup, .speedGroup {
-            display: flex;
-            gap: 15px;
-        }
-
-        .ctrlBtn {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 4px solid #00ff88;
-            background: rgba(0,0,0,0.7);
-            color: #00ff88;
-            font-size: 45px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 5px 25px rgba(0,255,136,0.4);
-            transition: all 0.1s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .ctrlBtn:active {
-            transform: scale(0.88);
-            background: rgba(0,255,136,0.3);
-            box-shadow: 0 0 35px rgba(0,255,136,0.8);
-        }
-
-        .ctrlBtn.large {
-            width: 120px;
-            height: 120px;
-            border-color: #ff0066;
-            color: #ff0066;
-            font-size: 55px;
-        }
-
-        .ctrlBtn.large:active {
-            background: rgba(255,0,102,0.3);
-        }
-
-        /* زر الكاميرا */
-        #camBtn {            position: fixed;
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
-            padding: 12px 20px;
-            background: linear-gradient(135deg, #00ff88, #00ccff);
-            border: none;
-            border-radius: 25px;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(0,255,136,0.5);
-            z-index: 1000;
-            display: none;
-        }
-
-        /* التعليمات */
-        #info {
-            position: fixed;
-            top: 150px;
-            left: 10px;
-            background: rgba(0,0,0,0.85);
-            padding: 15px;
-            border-radius: 15px;
-            border: 3px solid #00ff88;
-            color: white;
-            display: none;
-            z-index: 1000;
-            font-size: 15px;
-            max-width: 220px;
-        }
-
-        #info h3 {
-            color: #00ff88;
-            margin-bottom: 10px;
-            font-size: 20px;
-        }
-
-        #info p {
-            margin: 8px 0;
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+        body { font-family: 'Cairo', sans-serif; }
+        #editor-container { height: 60vh; }
+        .console-output { 
+            background: #1e1e1e; 
+            font-family: 'Courier New', monospace; 
+            max-height: 30vh;
+            overflow-y: auto;
         }
     </style>
 </head>
-<body>
-    <!-- شاشة البداية -->
-    <div id="startScreen">
-        <h1>🏁 سباق السرعة 🏁</h1>
-        <p>اللعبة الاحترافية للتابلت</p>
-        <button id="startBtn" onclick="startGame()">🎮 ابدأ السباق</button>    </div>
+<body class="bg-gray-900 text-white">
 
-    <!-- العدادات -->
-    <div id="hud">
-        <div id="lapCounter">اللفة: <span id="lapNum">1</span>/3</div>
-        <div id="speedometer">
-            <div id="speedValue">0</div>
-            <div id="speedLabel">km/h</div>
+    <!-- الشريط العلوي -->
+    <header class="bg-gray-800 border-b border-gray-700 p-4 shadow-lg">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-purple-600 p-2 rounded-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    محرر الأكواد
+                </h1>
+            </div>
+            
+            <div class="flex gap-3">
+                <button onclick="runCode()" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-semibold transition flex items-center gap-2 shadow-lg hover:shadow-green-500/50">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                    </svg>
+                    تشغيل
+                </button>
+                <button onclick="saveCode()" id="saveBtn" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-semibold transition flex items-center gap-2 shadow-lg hover:shadow-blue-500/50">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+                    </svg>
+                    حفظ
+                </button>            </div>
         </div>
-    </div>
+    </header>
 
-    <!-- الخريطة -->
-    <canvas id="minimap"></canvas>
+    <!-- المحتوى الرئيسي -->
+    <main class="container mx-auto p-4">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            
+            <!-- المحرر -->
+            <div class="lg:col-span-2 bg-gray-800 rounded-xl overflow-hidden shadow-2xl border border-gray-700">
+                <div class="bg-gray-700 px-4 py-2 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <span class="text-gray-400 text-sm">main.py</span>
+                </div>
+                <div id="editor-container" class="border-t border-gray-700"></div>
+            </div>
 
-    <!-- التعليمات -->
-    <div id="info">
-        <h3>🎮 التحكم</h3>
-        <p>🚀 = تسريع</p>
-        <p>🛑 = فرامل</p>
-        <p>⬅️ ➡️ = توجيه</p>
-        <p>📷 = تغيير الكاميرا</p>
-    </div>
-
-    <!-- زر الكاميرا -->
-    <button id="camBtn" onclick="toggleCamera()">📷 كاميرا</button>
-
-    <!-- أزرار التحكم -->
-    <div id="controls">
-        <div class="steeringGroup">
-            <button class="ctrlBtn" id="btnLeft">⬅️</button>
-            <button class="ctrlBtn" id="btnRight">➡️</button>
+            <!-- الكونسول -->
+            <div class="bg-gray-800 rounded-xl overflow-hidden shadow-2xl border border-gray-700">
+                <div class="bg-gray-700 px-4 py-3 flex items-center justify-between">
+                    <h2 class="font-semibold flex items-center gap-2">
+                        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3"></path>
+                        </svg>
+                        المخرجات
+                    </h2>
+                    <button onclick="clearConsole()" class="text-xs text-gray-400 hover:text-white transition">
+                        مسح
+                    </button>
+                </div>
+                <div id="console" class="console-output p-4 text-green-400 text-sm leading-relaxed">
+                    <div class="text-gray-500 italic">اضغط "تشغيل" لرؤية النتيجة...</div>
+                </div>
+            </div>
         </div>
-        <div class="speedGroup">
-            <button class="ctrlBtn large" id="btnBrake">🛑</button>
-            <button class="ctrlBtn large" id="btnGas">🚀</button>
+
+        <!-- أمثلة سريعة -->
+        <div class="mt-6 bg-gray-800 rounded-xl p-6 border border-gray-700">
+            <h3 class="text-lg font-semibold mb-4 text-purple-400">أمثلة سريعة:</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <button onclick="loadExample('hello')" class="bg-gray-700 hover:bg-gray-600 p-3 rounded-lg text-right transition border border-gray-600 hover:border-purple-500">
+                    <div class="font-semibold text-sm">👋 Hello World</div>
+                    <div class="text-xs text-gray-400 mt-1">أول برنامج</div>
+                </button>
+                <button onclick="loadExample('calculator')" class="bg-gray-700 hover:bg-gray-600 p-3 rounded-lg text-right transition border border-gray-600 hover:border-purple-500">
+                    <div class="font-semibold text-sm">🔢 آلة حاسبة</div>                    <div class="text-xs text-gray-400 mt-1">عمليات رياضية</div>
+                </button>
+                <button onclick="loadExample('loop')" class="bg-gray-700 hover:bg-gray-600 p-3 rounded-lg text-right transition border border-gray-600 hover:border-purple-500">
+                    <div class="font-semibold text-sm">🔄 حلقة تكرار</div>
+                    <div class="text-xs text-gray-400 mt-1">Loop example</div>
+                </button>
+            </div>
         </div>
-    </div>
+    </main>
 
-    <!-- مساحة اللعبة -->
-    <div id="gameCanvas"></div>
+    <!-- Footer -->
+    <footer class="bg-gray-800 border-t border-gray-700 mt-8 py-6 text-center text-gray-400 text-sm">
+        <p>تم التطوير بـ ❤️ باستخدام Pyodide و Monaco Editor</p>
+    </footer>
 
-    <!-- Three.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
     <script>
-        // المتغيرات العامة
-        let scene, camera, renderer;
-        let car, wheels = [];
-        let speed = 0, maxSpeed = 280;
-        let gameRunning = false;        let cameraView = 'external';
-        let carPos = { x: 0, z: 0 };
-        let carAngle = 0;
-        let velocity = 0;
-        let keys = {};
-        let lap = 1;
-        let particles = [];
+        let editor;
+        let pyodide = null;
 
-        // بدء اللعبة
-        function startGame() {
-            document.getElementById('startScreen').style.display = 'none';
-            document.getElementById('hud').style.display = 'flex';
-            document.getElementById('minimap').style.display = 'block';
-            document.getElementById('info').style.display = 'block';
-            document.getElementById('camBtn').style.display = 'block';
-            document.getElementById('controls').style.display = 'flex';
-            gameRunning = true;
-        }
-
-        // تهيئة اللعبة
-        function init() {
-            // المشهد
-            scene = new THREE.Scene();
-            scene.fog = new THREE.Fog(0x87CEEB, 30, 250);
-            scene.background = new THREE.Color(0x87CEEB);
-
-            // الكاميرا
-            camera = new THREE.PerspectiveCamera(
-                70,
-                window.innerWidth / window.innerHeight,
-                0.1,
-                1000
-            );
-
-            // الريندر
-            renderer = new THREE.WebGLRenderer({ antialias: false });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            document.getElementById('gameCanvas').appendChild(renderer.domElement);
-
-            // الإضاءة
-            const ambient = new THREE.AmbientLight(0xffffff, 0.7);
-            scene.add(ambient);
-
-            const sun = new THREE.DirectionalLight(0xffffff, 0.9);
-            sun.position.set(50, 100, 50);
-            scene.add(sun);
-
-            // إنشاء العناصر
-            createTrack();            createCar();
-            createEnvironment();
-            setupControls();
-
-            // البدء
-            animate();
-        }
-
-        function createTrack() {
-            // الحلبة
-            const shape = new THREE.Shape();
-            const radius = 70;
-            const width = 22;
-            
-            for (let i = 0; i <= 32; i++) {
-                const angle = (i / 32) * Math.PI * 2;
-                const r = radius + Math.sin(angle * 3) * 15;
-                const x = Math.cos(angle) * r;
-                const z = Math.sin(angle) * r;
-                if (i === 0) shape.moveTo(x, z);
-                else shape.lineTo(x, z);
-            }
-
-            const geom = new THREE.ExtrudeGeometry(shape, {
-                depth: width,
-                bevelEnabled: false
+        // تهيئة المحرر
+        require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' } });
+        require(['vs/editor/editor.main'], function() {
+            editor = monaco.editor.create(document.getElementById('editor-container'), {
+                value: '# اكتب كود بايثون هنا\nprint("Hello World!")\n\n# جرب تغيير النص وتشغيل الكود',
+                language: 'python',
+                theme: 'vs-dark',
+                fontSize: 14,
+                fontFamily: 'Courier New',
+                minimap: { enabled: true },
+                scrollBeyondLastLine: false,
+                automaticLayout: true,
+                rtl: true
             });
+        });
 
-            const mat = new THREE.MeshBasicMaterial({ color: 0x333333 });
-            const road = new THREE.Mesh(geom, mat);
-            road.rotation.x = -Math.PI / 2;
-            road.position.y = 0.1;
-            scene.add(road);
-
-            // الأرضية
-            const groundGeom = new THREE.PlaneGeometry(400, 400);
-            const groundMat = new THREE.MeshBasicMaterial({ color: 0x3d7a3d });
-            const ground = new THREE.Mesh(groundGeom, groundMat);
-            ground.rotation.x = -Math.PI / 2;
-            scene.add(ground);
-
-            // خطوط الحلبة
-            for (let i = 0; i < 20; i++) {
-                const angle = (i / 20) * Math.PI * 2;
-                const r = radius;
-                const lineGeom = new THREE.PlaneGeometry(6, 2);
-                const lineMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-                const line = new THREE.Mesh(lineGeom, lineMat);
-                line.rotation.x = -Math.PI / 2;
-                line.position.set(Math.cos(angle) * r, 0.3, Math.sin(angle) * r);                line.lookAt(0, 0.3, 0);
-                scene.add(line);
-            }
+        // تحميل Pyodide
+        async function loadPyodide() {
+            if (pyodide) return pyodide;
+            addToConsole('جاري تحميل بايثون... انتظر قليلاً...');
+            pyodide = await loadPyodide();
+            addToConsole('✅ تم تحميل بايثون بنجاح!');
+            return pyodide;
         }
 
-        function createCar() {
-            car = new THREE.Group();
-
-            // الجسم
-            const bodyGeom = new THREE.BoxGeometry(2, 0.9, 4);
-            const bodyMat = new THREE.MeshBasicMaterial({ color: 0x0066ff });
-            const body = new THREE.Mesh(bodyGeom, bodyMat);
-            body.position.y = 0.9;
-            car.add(body);
-
-            // الكابينة
-            const cabinGeom = new THREE.BoxGeometry(1.8, 0.6, 2);
-            const cabinMat = new THREE.MeshBasicMaterial({ color: 0x003399 });
-            const cabin = new THREE.Mesh(cabinGeom, cabinMat);
-            cabin.position.set(0, 1.7, -0.2);
-            car.add(cabin);
-
-            // الزجاج
-            const glassGeom = new THREE.BoxGeometry(1.85, 0.5, 1);
-            const glassMat = new THREE.MeshBasicMaterial({ 
-                color: 0x111111,
-                transparent: true,
-                opacity: 0.7
-            });
-            const glass = new THREE.Mesh(glassGeom, glassMat);
-            glass.position.set(0, 1.7, 0.9);
-            car.add(glass);
-
-            // spoiler
-            const spoilerGeom = new THREE.BoxGeometry(2.2, 0.2, 0.6);
-            const spoilerMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
-            const spoiler = new THREE.Mesh(spoilerGeom, spoilerMat);
-            spoiler.position.set(0, 1.8, -1.8);
-            car.add(spoiler);
-
-            // العجلات
-            const wheelGeom = new THREE.CylinderGeometry(0.45, 0.45, 0.35, 16);
-            const wheelMat = new THREE.MeshBasicMaterial({ color: 0x111111 });
-            
-            const positions = [
-                [-1.15, 0.45, 1.3],
-                [1.15, 0.45, 1.3],
-                [-1.15, 0.45, -1.3],
-                [1.15, 0.45, -1.3]
-            ];
-            positions.forEach(pos => {
-                const wheel = new THREE.Mesh(wheelGeom, wheelMat);
-                wheel.rotation.z = Math.PI / 2;
-                wheel.position.set(...pos);
-                car.add(wheel);
-                wheels.push(wheel);
-            });
-
-            // الأضواء
-            const lightGeom = new THREE.BoxGeometry(0.5, 0.25, 0.1);
-            const lightMat = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-            const leftLight = new THREE.Mesh(lightGeom, lightMat);
-            leftLight.position.set(-0.7, 0.9, 2);
-            car.add(leftLight);
-            
-            const rightLight = new THREE.Mesh(lightGeom, lightMat);
-            rightLight.position.set(0.7, 0.9, 2);
-            car.add(rightLight);
-
-            // الأضواء الخلفية
-            const tailMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-            const leftTail = new THREE.Mesh(lightGeom, tailMat);
-            leftTail.position.set(-0.7, 0.9, -2);
-            car.add(leftTail);
-            
-            const rightTail = new THREE.Mesh(lightGeom, tailMat);
-            rightTail.position.set(0.7, 0.9, -2);
-            car.add(rightTail);
-
-            car.position.set(0, 0, 0);
-            scene.add(car);
-        }
-
-        function createEnvironment() {
-            // أعلام
-            const colors = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff];
-            for (let i = 0; i < 16; i++) {
-                const angle = (i / 16) * Math.PI * 2;
-                const r = 95;
+        // تشغيل الكود
+        async function runCode() {
+            try {
+                const pyodideInstance = await loadPyodide();
+                const code = editor.getValue();                
+                addToConsole('🚀 جاري التنفيذ...\n' + '='.repeat(40));
                 
-                // العمود
-                const poleGeom = new THREE.CylinderGeometry(0.15, 0.15, 7);
-                const poleMat = new THREE.MeshBasicMaterial({ color: 0x666666 });
-                const pole = new THREE.Mesh(poleGeom, poleMat);
-                pole.position.set(Math.cos(angle) * r, 3.5, Math.sin(angle) * r);
-                scene.add(pole);
-
-                // العلم
-                const flagGeom = new THREE.BoxGeometry(3, 2, 0.1);                const flagMat = new THREE.MeshBasicMaterial({ 
-                    color: colors[i % colors.length] 
+                // إعادة توجيه المخرجات
+                let output = [];
+                pyodideInstance.setStdout({ 
+                    batched: (msg) => { 
+                        output.push(msg); 
+                        addToConsole(msg);
+                    } 
                 });
-                const flag = new THREE.Mesh(flagGeom, flagMat);
-                flag.position.set(Math.cos(angle) * r + 1.5, 6.5, Math.sin(angle) * r);
-                scene.add(flag);
-            }
-
-            // أشجار
-            for (let i = 0; i < 12; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const r = 120 + Math.random() * 30;
                 
-                // الجذع
-                const trunkGeom = new THREE.CylinderGeometry(0.5, 0.7, 3);
-                const trunkMat = new THREE.MeshBasicMaterial({ color: 0x8B4513 });
-                const trunk = new THREE.Mesh(trunkGeom, trunkMat);
-                trunk.position.set(Math.cos(angle) * r, 1.5, Math.sin(angle) * r);
-                scene.add(trunk);
-
-                // الأوراق
-                const leavesGeom = new THREE.ConeGeometry(2.5, 6, 8);
-                const leavesMat = new THREE.MeshBasicMaterial({ color: 0x228B22 });
-                const leaves = new THREE.Mesh(leavesGeom, leavesMat);
-                leaves.position.set(Math.cos(angle) * r, 5, Math.sin(angle) * r);
-                scene.add(leaves);
+                await pyodideInstance.runPythonAsync(code);
+                
+                if (output.length === 0) {
+                    addToConsole('✅ تم التنفيذ بنجاح (لا توجد مخرجات)');
+                }
+                
+            } catch (error) {
+                addToConsole('❌ خطأ: ' + error.message, 'error');
             }
         }
 
-        function setupControls() {
-            // لوحة المفاتيح
-            window.addEventListener('keydown', e => {
-                keys[e.code] = true;
-                if (e.code === 'KeyC') toggleCamera();
+        // إضافة نص للكونسول
+        function addToConsole(text, type = 'normal') {
+            const consoleDiv = document.getElementById('console');
+            if (consoleDiv.children[0]?.classList.contains('italic')) {
+                consoleDiv.innerHTML = '';
+            }
+            
+            const line = document.createElement('div');
+            line.className = 'mb-1 ' + (type === 'error' ? 'text-red-400' : 'text-green-400');
+            line.textContent = text;
+            consoleDiv.appendChild(line);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+
+        // مسح الكونسول
+        function clearConsole() {
+            document.getElementById('console').innerHTML = '<div class="text-gray-500 italic">اضغط "تشغيل" لرؤية النتيجة...</div>';
+        }
+
+        // حفظ الكود (محاكاة)
+        async function saveCode() {
+            const code = editor.getValue();
+            const saveBtn = document.getElementById('saveBtn');
+            const originalText = saveBtn.innerHTML;
+            
+            saveBtn.innerHTML = '⏳ جاري الحفظ...';
+            saveBtn.disabled = true;            
+            // محاكاة الحفظ (يمكنك ربطها بـ Supabase لاحقاً)
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // إنشاء رابط فريد
+            const projectId = Math.random().toString(36).substring(7);
+            const shareUrl = window.location.href.split('#')[0] + '#project=' + projectId;
+            
+            // حفظ في localStorage
+            localStorage.setItem('project_' + projectId, code);
+            
+            addToConsole('💾 تم حفظ المشروع!');
+            addToConsole('🔗 الرابط: ' + shareUrl);
+            
+            // نسخ الرابط للحافظة
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                alert('تم الحفظ! تم نسخ الرابط للحافظة');
             });
-            window.addEventListener('keyup', e => keys[e.code] = false);
-
-            // اللمس - الغاز
-            const btnGas = document.getElementById('btnGas');
-            btnGas.addEventListener('touchstart', e => { e.preventDefault(); keys['KeyW'] = true; });
-            btnGas.addEventListener('touchend', e => { e.preventDefault(); keys['KeyW'] = false; });
-            btnGas.addEventListener('mousedown', () => keys['KeyW'] = true);
-            btnGas.addEventListener('mouseup', () => keys['KeyW'] = false);
-
-            // الفرامل
-            const btnBrake = document.getElementById('btnBrake');
-            btnBrake.addEventListener('touchstart', e => { e.preventDefault(); keys['KeyS'] = true; });
-            btnBrake.addEventListener('touchend', e => { e.preventDefault(); keys['KeyS'] = false; });
-            btnBrake.addEventListener('mousedown', () => keys['KeyS'] = true);
-            btnBrake.addEventListener('mouseup', () => keys['KeyS'] = false);
-            // اليسار
-            const btnLeft = document.getElementById('btnLeft');
-            btnLeft.addEventListener('touchstart', e => { e.preventDefault(); keys['KeyA'] = true; });
-            btnLeft.addEventListener('touchend', e => { e.preventDefault(); keys['KeyA'] = false; });
-            btnLeft.addEventListener('mousedown', () => keys['KeyA'] = true);
-            btnLeft.addEventListener('mouseup', () => keys['KeyA'] = false);
-
-            // اليمين
-            const btnRight = document.getElementById('btnRight');
-            btnRight.addEventListener('touchstart', e => { e.preventDefault(); keys['KeyD'] = true; });
-            btnRight.addEventListener('touchend', e => { e.preventDefault(); keys['KeyD'] = false; });
-            btnRight.addEventListener('mousedown', () => keys['KeyD'] = true);
-            btnRight.addEventListener('mouseup', () => keys['KeyD'] = false);
-
-            // resize
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
+            
+            saveBtn.innerHTML = originalText;
+            saveBtn.disabled = false;
         }
 
-        function toggleCamera() {
-            cameraView = cameraView === 'external' ? 'internal' : 'external';
-        }
+        // تحميل الأمثلة
+        function loadExample(type) {
+            const examples = {
+                hello: `# برنامج Hello World
+name = input("ما اسمك؟ ")
+print(f"مرحباً {name}! 👋")
+print("أهلاً بك في محرر الأكواد")`,
+                
+                calculator: `# آلة حاسبة بسيطة
+num1 = 10
+num2 = 5
 
-        function updateCar() {
-            if (!gameRunning) return;
+print("الآلة الحاسبة 🔢")
+print("=" * 30)
+print(f"{num1} + {num2} = {num1 + num2}")
+print(f"{num1} - {num2} = {num1 - num2}")
+print(f"{num1} × {num2} = {num1 * num2}")
+print(f"{num1} ÷ {num2} = {num1 / num2}")`,
+                
+                loop: `# حلقة تكرار
+print("عداد من 1 إلى 10:\n")
+for i in range(1, 11):
+    print(f"الرقم {i} " + "⭐" * i)
 
-            // التسريع
-            if (keys['KeyW']) velocity += 0.7;
-            if (keys['KeyS']) velocity -= 1.3;
-
-            // الاحتكاك
-            velocity *= 0.96;
-
-            // الحد الأقصى
-            if (velocity > maxSpeed) velocity = maxSpeed;
-
-            // التوجيه
-            if (Math.abs(velocity) > 1) {
-                const turn = 0.045 * (velocity / maxSpeed);
-                if (keys['KeyA']) carAngle += turn;
-                if (keys['KeyD']) carAngle -= turn;
-            }
-
-            // الحركة
-            carPos.x += Math.sin(carAngle) * velocity * 0.01;
-            carPos.z += Math.cos(carAngle) * velocity * 0.01;
-            car.position.x = carPos.x;
-            car.position.z = carPos.z;
-            car.rotation.y = carAngle;
-
-            // السرعة
-            speed = Math.abs(Math.floor(velocity));
-            document.getElementById('speedValue').textContent = speed;
-
-            // العجلات
-            wheels.forEach(w => w.rotation.x += velocity * 0.02);
-
-            updateCamera();
-            updateMinimap();
-        }
-
-        function updateCamera() {
-            if (cameraView === 'external') {
-                const offset = new THREE.Vector3(0, 5, -12);
-                const camPos = offset.applyMatrix4(car.matrixWorld);
-                camera.position.lerp(camPos, 0.1);
-                camera.lookAt(car.position.x, car.position.y + 2, car.position.z);
-            } else {
-                const offset = new THREE.Vector3(0, 2.2, 0.5);
-                const camPos = offset.applyMatrix4(car.matrixWorld);
-                camera.position.copy(camPos);
-                const lookAt = new THREE.Vector3(0, 2, 10);
-                const lookPos = lookAt.applyMatrix4(car.matrixWorld);
-                camera.lookAt(lookPos);
+print("\n✅ انتهى العد!")`
+            };
+                        if (editor && examples[type]) {
+                editor.setValue(examples[type]);
+                addToConsole(`📋 تم تحميل مثال: ${type}`);
             }
         }
 
-        function updateMinimap() {
-            const canvas = document.getElementById('minimap');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 160;
-            canvas.height = 130;
-
-            ctx.fillStyle = 'rgba(0,0,0,0.85)';
-            ctx.fillRect(0, 0, 160, 130);
-
-            ctx.strokeStyle = '#00ff88';
-            ctx.lineWidth = 14;
-            ctx.beginPath();
-            for (let i = 0; i <= 32; i++) {
-                const angle = (i / 32) * Math.PI * 2;
-                const r = 40 + Math.sin(angle * 3) * 8;
-                const x = 80 + Math.cos(angle) * r * 0.6;
-                const y = 65 + Math.sin(angle) * r * 0.6;
-                if (i === 0) ctx.moveTo(x, y);                else ctx.lineTo(x, y);
+        // تحميل مشروع من الرابط
+        window.onload = function() {
+            const hash = window.location.hash;
+            if (hash.includes('project=')) {
+                const projectId = hash.split('project=')[1];
+                const savedCode = localStorage.getItem('project_' + projectId);
+                if (savedCode && editor) {
+                    editor.setValue(savedCode);
+                    addToConsole('📂 تم تحميل المشروع المحفوظ');
+                }
             }
-            ctx.stroke();
-
-            const carX = 80 + carPos.x * 0.6;
-            const carY = 65 + carPos.z * 0.6;
-            ctx.fillStyle = '#ff0066';
-            ctx.beginPath();
-            ctx.arc(carX, carY, 5, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            updateCar();
-            renderer.render(scene, camera);
-        }
-
-        window.onload = init;
+        };
     </script>
 </body>
 </html>
