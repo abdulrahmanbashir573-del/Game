@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GameFixer | نظام تحكم كامل</title>
+    <title>GameFixer | الموقع الرسمي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
@@ -28,7 +28,6 @@
             --logo-glow: 0 0 15px rgba(59,130,246,0.3);
             --success: #10b981;
             --danger: #ef4444;
-            --warning: #f59e0b;
         }
         body.dark {
             --bg-primary: #0f172a;
@@ -90,24 +89,8 @@
             border-radius: 40px;
             color: var(--text-primary);
         }
-        .search-box { display: flex; gap: 8px; }
-        .search-box input {
-            padding: 8px 16px;
-            border-radius: 40px;
-            border: 1px solid var(--border);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-        }
-        .search-box button {
-            background: var(--accent);
-            border: none;
-            padding: 0 18px;
-            border-radius: 40px;
-            color: white;
-            cursor: pointer;
-        }
         
-        /* Settings Button */
+        /* Settings Button - يظهر للجميع لكن بعد الضغط يطلب كلمة سر */
         .settings-btn {
             position: fixed;
             bottom: 20px;
@@ -128,7 +111,7 @@
         }
         .settings-btn:hover { transform: scale(1.05); background: var(--accent-hover); }
         
-        /* Modal */
+        /* Modals */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -149,14 +132,6 @@
             max-height: 80vh;
             overflow-y: auto;
             padding: 28px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-        }
-        .modal-content h2 {
-            margin-bottom: 20px;
-            color: var(--accent);
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
         .password-input {
             width: 100%;
@@ -174,18 +149,11 @@
             border: 1px solid var(--border);
             border-radius: 20px;
         }
-        .settings-section h3 {
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
         .toggle-switch {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin: 12px 0;
-        }
-        .toggle-label {
-            font-weight: 500;
         }
         .toggle-input {
             width: 50px;
@@ -196,9 +164,7 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        .toggle-input.active {
-            background: var(--success);
-        }
+        .toggle-input.active { background: var(--success); }
         .toggle-input:after {
             content: '';
             position: absolute;
@@ -210,9 +176,7 @@
             left: 4px;
             transition: 0.2s;
         }
-        .toggle-input.active:after {
-            left: 24px;
-        }
+        .toggle-input.active:after { left: 24px; }
         .danger-btn {
             background: var(--danger);
             color: white;
@@ -235,6 +199,8 @@
             cursor: pointer;
             color: var(--text-secondary);
         }
+        
+        /* Hero & Social */
         .hero {
             background: linear-gradient(145deg, var(--bg-secondary), var(--bg-primary));
             border-radius: 2rem;
@@ -265,6 +231,7 @@
         .social-btn.whatsapp { background: #25D366; color: white; }
         .social-btn:hover { transform: scale(1.03); opacity: 0.9; }
         
+        /* Videos & Downloads Grids */
         .videos-grid, .downloads-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -323,26 +290,30 @@
             border-radius: 40px;
             margin-top: 10px;
         }
-        .upload-panel {
+        
+        /* Admin Panel - يظهر فقط للمدير */
+        .admin-panel {
+            display: none;
             background: var(--bg-secondary);
             border-radius: 24px;
             padding: 24px;
             margin: 30px 0;
             border: 2px dashed var(--accent);
         }
-        .upload-form {
+        .admin-panel.show { display: block; }
+        .admin-form {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
-        .upload-form input, .upload-form select, .upload-form textarea {
+        .admin-form input, .admin-form select, .admin-form textarea {
             padding: 12px;
             border-radius: 16px;
             border: 1px solid var(--border);
             background: var(--bg-primary);
             color: var(--text-primary);
         }
-        .upload-form button {
+        .admin-form button {
             background: var(--success);
             color: white;
             border: none;
@@ -350,9 +321,21 @@
             border-radius: 40px;
             cursor: pointer;
         }
+        .delete-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 8px;
+            font-size: 0.7rem;
+            display: inline-block;
+        }
+        
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 28px;
             margin-bottom: 48px;
         }
@@ -405,16 +388,6 @@
             border-right: 5px solid var(--accent);
             padding-right: 16px;
         }
-        .delete-btn {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 5px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            margin-top: 8px;
-            font-size: 0.7rem;
-        }
     </style>
 </head>
 <body>
@@ -438,10 +411,6 @@
                 <a href="#" data-tab="windows">🛠️ ويندوز</a>
                 <a href="#" data-tab="about">عنّي</a>
                 <a href="#" data-tab="contact">تواصل</a>
-            </div>
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="بحث...">
-                <button id="searchBtn"><i class="fas fa-search"></i></button>
             </div>
             <button class="dark-toggle" id="darkModeToggle"><i class="fas fa-moon"></i></button>
         </div>
@@ -467,53 +436,39 @@
     </div>
 </div>
 
-<!-- Settings Modal (after login) -->
+<!-- Settings Modal (Admin only) -->
 <div class="modal-overlay" id="settingsModal">
     <div class="modal-content">
         <span class="close-modal" id="closeSettingsModal">&times;</span>
-        <h2><i class="fas fa-sliders-h"></i> إعدادات الموقع</h2>
+        <h2><i class="fas fa-sliders-h"></i> إعدادات المدير</h2>
         
         <div class="settings-section">
-            <h3><i class="fas fa-video"></i> إدارة الفيديوهات</h3>
-            <div class="toggle-switch">
-                <span class="toggle-label">🔓 السماح بإضافة فيديوهات جديدة</span>
-                <div class="toggle-input" id="toggleAddVideos"></div>
-            </div>
+            <h3><i class="fas fa-video"></i> الفيديوهات</h3>
             <div class="stats-box" id="videosCountBox"></div>
+            <button class="danger-btn" id="clearAllVideos"><i class="fas fa-trash"></i> حذف جميع الفيديوهات</button>
         </div>
         
         <div class="settings-section">
-            <h3><i class="fas fa-download"></i> إدارة التحميلات</h3>
-            <div class="toggle-switch">
-                <span class="toggle-label">🔓 السماح بإضافة روابط تحميل جديدة</span>
-                <div class="toggle-input" id="toggleAddDownloads"></div>
-            </div>
+            <h3><i class="fas fa-download"></i> التحميلات</h3>
             <div class="stats-box" id="downloadsCountBox"></div>
+            <button class="danger-btn" id="clearAllDownloads"><i class="fas fa-trash"></i> حذف جميع روابط التحميل</button>
         </div>
         
         <div class="settings-section">
-            <h3><i class="fas fa-comment"></i> إدارة التعليقات</h3>
-            <div class="toggle-switch">
-                <span class="toggle-label">🔓 السماح بإضافة تعليقات جديدة</span>
-                <div class="toggle-input" id="toggleComments"></div>
-            </div>
+            <h3><i class="fas fa-comment"></i> التعليقات</h3>
             <div class="stats-box" id="commentsCountBox"></div>
             <button class="danger-btn" id="clearAllComments"><i class="fas fa-trash"></i> حذف جميع التعليقات</button>
         </div>
         
         <div class="settings-section">
-            <h3><i class="fas fa-star"></i> إدارة التقييمات</h3>
-            <div class="toggle-switch">
-                <span class="toggle-label">🔓 السماح بإضافة تقييمات جديدة</span>
-                <div class="toggle-input" id="toggleRatings"></div>
-            </div>
-            <button class="danger-btn" id="clearAllRatings"><i class="fas fa-trash"></i> حذف جميع التقييمات</button>
+            <h3><i class="fas fa-chart-line"></i> إحصائيات</h3>
+            <div class="stats-box" id="statsBox"></div>
+            <button class="danger-btn" id="resetAllData"><i class="fas fa-database"></i> إعادة تعيين كل بيانات الموقع</button>
         </div>
         
         <div class="settings-section">
-            <h3><i class="fas fa-chart-line"></i> إحصائيات الموقع</h3>
-            <div class="stats-box" id="statsBox"></div>
-            <button class="danger-btn" id="resetAllData"><i class="fas fa-database"></i> إعادة تعيين كل بيانات الموقع</button>
+            <h3><i class="fas fa-user-shield"></i> جلسة المدير</h3>
+            <button class="danger-btn" id="logoutAdminBtn"><i class="fas fa-sign-out-alt"></i> تسجيل خروج (إخفاء أدوات الإدارة)</button>
         </div>
     </div>
 </div>
@@ -535,54 +490,36 @@
 </footer>
 
 <script>
-    // ========== SETTINGS SYSTEM ==========
+    // ========== ADMIN SESSION ==========
     const ADMIN_PASSWORD = "12122009";
+    let isAdmin = sessionStorage.getItem("gamefixer_admin") === "true";
     
-    // Load settings from localStorage
-    let settings = JSON.parse(localStorage.getItem("gamefixer_settings")) || {
-        allowAddVideos: true,
-        allowAddDownloads: true,
-        allowComments: true,
-        allowRatings: true
-    };
-    
-    function saveSettings() {
-        localStorage.setItem("gamefixer_settings", JSON.stringify(settings));
-        updateToggleUI();
-    }
-    
-    function updateToggleUI() {
-        const toggleVideos = document.getElementById("toggleAddVideos");
-        const toggleDownloads = document.getElementById("toggleAddDownloads");
-        const toggleComments = document.getElementById("toggleComments");
-        const toggleRatings = document.getElementById("toggleRatings");
-        
-        if(toggleVideos) toggleVideos.className = settings.allowAddVideos ? "toggle-input active" : "toggle-input";
-        if(toggleDownloads) toggleDownloads.className = settings.allowAddDownloads ? "toggle-input active" : "toggle-input";
-        if(toggleComments) toggleComments.className = settings.allowComments ? "toggle-input active" : "toggle-input";
-        if(toggleRatings) toggleRatings.className = settings.allowRatings ? "toggle-input active" : "toggle-input";
+    function setAdminSession(admin) {
+        isAdmin = admin;
+        if(admin) sessionStorage.setItem("gamefixer_admin", "true");
+        else sessionStorage.removeItem("gamefixer_admin");
+        // إعادة تحميل الصفحة الحالية لتحديث واجهة الإدارة
+        loadTab(currentTab);
     }
     
     // ========== DATA ==========
     let downloadsList = JSON.parse(localStorage.getItem("gamefixer_downloads")) || [
-        { id: "1", title: "GTA V - النسخة الكاملة", description: "لعبة الأكشن الشهيرة", type: "game", link: "https://example.com/gta5", date: "2025-03-01" },
-        { id: "2", title: "Adobe Photoshop 2025", description: "برنامج تصميم الصور", type: "software", link: "https://example.com/photoshop", date: "2025-02-28" }
+        { id: "1", title: "GTA V - النسخة الكاملة", description: "لعبة الأكشن الشهيرة مع جميع الإضافات", type: "game", link: "https://example.com/gta5", date: "2025-03-01" },
+        { id: "2", title: "Adobe Photoshop 2025", description: "برنامج تصميم الصور الاحترافي", type: "software", link: "https://example.com/photoshop", date: "2025-02-28" }
     ];
     
     let videosList = JSON.parse(localStorage.getItem("gamefixer_videos")) || [
-        { id: "1", title: "شرح تحسين أداء ويندوز 11", description: "حلول سريعة", youtubeId: "dQw4w9WgXcQ", date: "2025-03-01" },
-        { id: "2", title: "أساسيات JavaScript", description: "تعلم JS من الصفر", youtubeId: "PkZNo7MFNFg", date: "2025-02-25" }
+        { id: "1", title: "شرح تحسين أداء ويندوز 11", description: "حلول سريعة وفعالة لزيادة سرعة الجهاز", youtubeId: "dQw4w9WgXcQ", date: "2025-03-01" },
+        { id: "2", title: "أساسيات JavaScript من الصفر", description: "تعلم JavaScript في 3 ساعات", youtubeId: "PkZNo7MFNFg", date: "2025-02-25" }
     ];
     
     let commentsList = JSON.parse(localStorage.getItem("siteComments")) || [];
-    let ratings = JSON.parse(localStorage.getItem("gamefixer_ratings")) || {};
     
     function saveDownloads() { localStorage.setItem("gamefixer_downloads", JSON.stringify(downloadsList)); }
     function saveVideos() { localStorage.setItem("gamefixer_videos", JSON.stringify(videosList)); }
     function saveComments() { localStorage.setItem("siteComments", JSON.stringify(commentsList)); }
     
     function addDownload(title, description, type, link) {
-        if(!settings.allowAddDownloads) { alert("⚠️ تم تعطيل إضافة روابط جديدة من قبل المدير"); return false; }
         if(!title || !link) { alert("الرجاء إدخال عنوان ورابط التحميل"); return false; }
         downloadsList.unshift({ id: Date.now().toString(), title, description: description || "لا يوجد وصف", type, link, date: new Date().toISOString().split('T')[0] });
         saveDownloads();
@@ -590,7 +527,6 @@
     }
     
     function addVideo(title, description, youtubeInput) {
-        if(!settings.allowAddVideos) { alert("⚠️ تم تعطيل إضافة فيديوهات جديدة من قبل المدير"); return false; }
         if(!title || !youtubeInput) { alert("الرجاء إدخال عنوان ورابط الفيديو"); return false; }
         let youtubeId = youtubeInput;
         const match = youtubeInput.match(/(?:youtube\.com\/watch\?v=)([^&]+)/);
@@ -602,17 +538,17 @@
     
     function deleteDownload(id) { downloadsList = downloadsList.filter(d => d.id !== id); saveDownloads(); loadTab(currentTab); }
     function deleteVideo(id) { videosList = videosList.filter(v => v.id !== id); saveVideos(); loadTab(currentTab); }
-    function deleteComment(index) { commentsList.splice(index, 1); saveComments(); loadTab(currentTab); }
+    function deleteAllVideos() { videosList = []; saveVideos(); loadTab(currentTab); }
+    function deleteAllDownloads() { downloadsList = []; saveDownloads(); loadTab(currentTab); }
+    function deleteAllComments() { commentsList = []; saveComments(); loadTab(currentTab); }
+    function resetAllData() { localStorage.clear(); sessionStorage.clear(); location.reload(); }
     
     function addComment(name, text) {
-        if(!settings.allowComments) { alert("⚠️ تم تعطيل إضافة تعليقات جديدة من قبل المدير"); return false; }
         if(!text) return false;
         commentsList.unshift({ name: name || "زائر", text, date: new Date().toLocaleString() });
         saveComments();
         return true;
     }
-    
-    function allowRating() { return settings.allowRatings; }
     
     // ========== RENDER FUNCTIONS ==========
     function escapeHtml(str) { if(!str) return ""; return str.replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'; }); }
@@ -620,13 +556,32 @@
     function renderVideosPage() {
         let html = `<h2 class="section-title">🎬 جميع الفيديوهات</h2><div class="videos-grid">`;
         videosList.forEach(video => {
-            html += `<div class="video-card"><div class="video-thumbnail" data-video-id="${video.youtubeId}"><img src="https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg"><div class="play-overlay"><i class="fas fa-play"></i></div></div><div class="video-info"><h3>${escapeHtml(video.title)}</h3><p>${escapeHtml(video.description)}</p><button class="delete-btn" data-id="${video.id}" data-type="video"><i class="fas fa-trash"></i> حذف</button></div></div>`;
+            html += `<div class="video-card">
+                        <div class="video-thumbnail" data-video-id="${video.youtubeId}">
+                            <img src="https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg">
+                            <div class="play-overlay"><i class="fas fa-play"></i></div>
+                        </div>
+                        <div class="video-info">
+                            <h3>${escapeHtml(video.title)}</h3>
+                            <p>${escapeHtml(video.description)}</p>`;
+            if(isAdmin) {
+                html += `<button class="delete-btn" data-id="${video.id}" data-type="video"><i class="fas fa-trash"></i> حذف</button>`;
+            }
+            html += `</div></div>`;
         });
         html += `</div>`;
-        if(settings.allowAddVideos) {
-            html += `<div class="upload-panel"><h3><i class="fab fa-youtube"></i> إضافة فيديو جديد</h3><div class="upload-form"><input type="text" id="newVideoTitle" placeholder="عنوان الفيديو *"><textarea id="newVideoDesc" rows="2" placeholder="وصف الفيديو"></textarea><input type="text" id="newVideoUrl" placeholder="رابط يوتيوب *"><button id="addVideoBtn"><i class="fab fa-youtube"></i> إضافة الفيديو</button></div></div>`;
-        } else {
-            html += `<div class="hero" style="background:var(--danger); color:white;"><p>🔒 إضافة الفيديوهات مقفولة من قبل المدير</p></div>`;
+        
+        // لوحة إضافة فيديو - تظهر فقط للمدير
+        if(isAdmin) {
+            html += `<div class="admin-panel show" id="addVideoPanel">
+                        <h3><i class="fab fa-youtube"></i> إضافة فيديو جديد</h3>
+                        <div class="admin-form">
+                            <input type="text" id="newVideoTitle" placeholder="عنوان الفيديو *">
+                            <textarea id="newVideoDesc" rows="2" placeholder="وصف الفيديو"></textarea>
+                            <input type="text" id="newVideoUrl" placeholder="رابط يوتيوب *">
+                            <button id="addVideoBtn"><i class="fab fa-youtube"></i> إضافة الفيديو</button>
+                        </div>
+                    </div>`;
         }
         return html;
     }
@@ -634,22 +589,38 @@
     function renderDownloadsPage() {
         let html = `<h2 class="section-title">📦 تحميل الألعاب والبرامج</h2><div class="downloads-grid">`;
         downloadsList.forEach(item => {
-            html += `<div class="download-card"><span class="download-type ${item.type === 'game' ? 'type-game' : 'type-software'}">${item.type === 'game' ? '🎮 لعبة' : '💻 برنامج'}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.description)}</p><a href="${item.link}" target="_blank" class="download-link-btn"><i class="fas fa-download"></i> تحميل</a><button class="delete-btn" data-id="${item.id}" data-type="download"><i class="fas fa-trash"></i> حذف</button></div>`;
+            html += `<div class="download-card">
+                        <span class="download-type ${item.type === 'game' ? 'type-game' : 'type-software'}">${item.type === 'game' ? '🎮 لعبة' : '💻 برنامج'}</span>
+                        <h3>${escapeHtml(item.title)}</h3>
+                        <p>${escapeHtml(item.description)}</p>
+                        <a href="${item.link}" target="_blank" class="download-link-btn"><i class="fas fa-download"></i> تحميل</a>`;
+            if(isAdmin) {
+                html += `<button class="delete-btn" data-id="${item.id}" data-type="download"><i class="fas fa-trash"></i> حذف</button>`;
+            }
+            html += `</div>`;
         });
         html += `</div>`;
-        if(settings.allowAddDownloads) {
-            html += `<div class="upload-panel"><h3><i class="fas fa-cloud-upload-alt"></i> إضافة رابط جديد</h3><div class="upload-form"><select id="uploadType"><option value="game">🎮 لعبة</option><option value="software">💻 برنامج</option></select><input type="text" id="uploadTitle" placeholder="العنوان *"><textarea id="uploadDesc" rows="2" placeholder="الوصف"></textarea><input type="url" id="uploadLink" placeholder="رابط التحميل *"><button id="submitUploadBtn"><i class="fas fa-plus"></i> إضافة التحميل</button></div></div>`;
-        } else {
-            html += `<div class="hero" style="background:var(--danger); color:white;"><p>🔒 إضافة روابط تحميل جديدة مقفولة من قبل المدير</p></div>`;
+        
+        if(isAdmin) {
+            html += `<div class="admin-panel show" id="addDownloadPanel">
+                        <h3><i class="fas fa-cloud-upload-alt"></i> إضافة رابط جديد</h3>
+                        <div class="admin-form">
+                            <select id="uploadType"><option value="game">🎮 لعبة</option><option value="software">💻 برنامج</option></select>
+                            <input type="text" id="uploadTitle" placeholder="العنوان *">
+                            <textarea id="uploadDesc" rows="2" placeholder="الوصف"></textarea>
+                            <input type="url" id="uploadLink" placeholder="رابط التحميل *">
+                            <button id="submitUploadBtn"><i class="fas fa-plus"></i> إضافة التحميل</button>
+                        </div>
+                    </div>`;
         }
         return html;
     }
     
-    // باقي المحتوى (برمجة، ألعاب، ويندوز، عني، تواصل)
+    // باقي المحتوى
     const postsData = {
-        programming: [{ title: "HTML من الصفر", desc: "دليلك الشامل", badge: "HTML/CSS", rating: 4 }, { title: "JavaScript ES6", desc: "المصفوفات والدوال", badge: "JavaScript", rating: 5 }, { title: "مشروع حاسبة", desc: "كود جاهز", badge: "مشروع", rating: 4 }],
-        games: [{ title: "مراجعة PUBG 2025", desc: "أفضل الاستراتيجيات", badge: "PUBG", rating: 5 }, { title: "GTA V مودات", desc: "إضافات واقعية", badge: "مودات", rating: 4 }],
-        windows: [{ title: "حل بطء الويندوز", desc: "تعطيل الخدمات", badge: "حلول", rating: 5 }, { title: "تثبيت ويندوز 11", desc: "شرح مصور", badge: "شروحات", rating: 5 }]
+        programming: [{ title: "HTML من الصفر", desc: "دليلك الشامل لتعلم HTML5", badge: "HTML/CSS", rating: 4 }, { title: "JavaScript ES6", desc: "المصفوفات والدوال السهمية", badge: "JavaScript", rating: 5 }, { title: "مشروع حاسبة تفاعلية", desc: "كود جاهز مع شرح", badge: "مشروع", rating: 4 }],
+        games: [{ title: "مراجعة PUBG 2025", desc: "أفضل الاستراتيجيات وخرائط جديدة", badge: "PUBG", rating: 5 }, { title: "GTA V - أفضل المودات", desc: "إضافات تجعل اللعبة أكثر واقعية", badge: "مودات", rating: 4 }],
+        windows: [{ title: "حل مشكلة بطء الويندوز", desc: "تعطيل الخدمات الغير ضرورية", badge: "حلول", rating: 5 }, { title: "تثبيت ويندوز 11", desc: "شرح مصور خطوة بخطوة", badge: "شروحات", rating: 5 }]
     };
     
     let currentTab = "home";
@@ -662,7 +633,6 @@
     }
     
     function attachRatingEvents() {
-        if(!settings.allowRatings) return;
         document.querySelectorAll('.rating i').forEach(star => {
             star.addEventListener('click', (e) => {
                 const ratingValue = parseInt(star.getAttribute('data-value'));
@@ -692,19 +662,24 @@
         return `<div class="hero"><h1>مرحباً بك في GameFixer 🎮</h1><p>حلول برمجية، مراجعات ألعاب، وشروحات ويندوز</p><div class="social-buttons"><a href="https://youtube.com/@algamers-b7l" target="_blank" class="social-btn youtube"><i class="fab fa-youtube"></i> يوتيوب</a><a href="https://www.tiktok.com/@algamers40" target="_blank" class="social-btn tiktok"><i class="fab fa-tiktok"></i> تيك توك</a><a href="https://whatsapp.com/channel/0029VbC8hDQAjPXIO2CSeV2U" target="_blank" class="social-btn whatsapp"><i class="fab fa-whatsapp"></i> واتساب</a></div></div>
         <h2 class="section-title">🎬 أحدث الفيديوهات</h2><div class="videos-grid">${videosList.slice(0,3).map(video => `<div class="video-card"><div class="video-thumbnail" data-video-id="${video.youtubeId}"><img src="https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg"><div class="play-overlay"><i class="fas fa-play"></i></div></div><div class="video-info"><h3>${escapeHtml(video.title)}</h3><p>${escapeHtml(video.description.substring(0,60))}</p></div></div>`).join('')}</div>
         <h2 class="section-title">📦 أحدث التحميلات</h2><div class="downloads-grid">${downloadsList.slice(0,3).map(item => `<div class="download-card"><span class="download-type ${item.type === 'game' ? 'type-game' : 'type-software'}">${item.type === 'game' ? '🎮 لعبة' : '💻 برنامج'}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.description.substring(0,50))}</p><a href="${item.link}" target="_blank" class="download-link-btn"><i class="fas fa-download"></i> تحميل</a></div>`).join('')}</div>
-        <h2 class="section-title">🏆 الأقسام</h2>${renderCards([...postsData.programming, ...postsData.games, ...postsData.windows].slice(0,4), "home")}`;
+        <h2 class="section-title">🏆 أقسام الموقع</h2>${renderCards([...postsData.programming, ...postsData.games, ...postsData.windows].slice(0,4), "home")}`;
     }
     
-    function renderProgramming() { return `<h2 class="section-title">💻 تعلم البرمجة</h2>${renderCards(postsData.programming, "prog")}`; }
-    function renderGames() { return `<h2 class="section-title">🎮 مراجعات الألعاب</h2>${renderCards(postsData.games, "game")}`; }
-    function renderWindows() { return `<h2 class="section-title">🛠️ حلول ويندوز</h2>${renderCards(postsData.windows, "win")}`; }
+    function renderProgramming() { return `<h2 class="section-title">💻 تعلم البرمجة من الصفر</h2>${renderCards(postsData.programming, "prog")}`; }
+    function renderGames() { return `<h2 class="section-title">🎮 مراجعات وشروحات الألعاب</h2>${renderCards(postsData.games, "game")}`; }
+    function renderWindows() { return `<h2 class="section-title">🛠️ حلول مشاكل الويندوز</h2>${renderCards(postsData.windows, "win")}`; }
     function renderAbout() { return `<div class="hero"><h2>من أنا؟</h2><p>أنا عبدالرحمن باشير، مبرمج ومحتوى تقني. أقدم شروحات برمجية، مراجعات ألعاب، وحلول ويندوز.</p><div style="background:var(--code-bg);padding:12px;border-radius:60px;display:inline-block;cursor:pointer;" id="revealEmailBtn"><i class="fas fa-envelope"></i> اضغط لإظهار البريد</div><p id="emailDisplay"></p></div>`; }
-    function renderContact() { return `<div class="contact-form"><h2>تواصل معي</h2><form id="contactForm"><input placeholder="اسمك"><input type="email" placeholder="بريدك"><textarea rows="4" placeholder="رسالتك"></textarea><button type="submit">إرسال</button></form><p id="formMsg"></p></div>`; }
+    function renderContact() { return `<div class="contact-form"><h2>تواصل معي</h2><form id="contactForm"><input placeholder="اسمك" required><input type="email" placeholder="بريدك"><textarea rows="4" placeholder="رسالتك"></textarea><button type="submit">إرسال</button></form><p id="formMsg"></p></div>`; }
     
     function renderCommentsSection() {
-        if(!settings.allowComments) return `<div class="comments-area"><h3>💬 التعليقات</h3><p style="color:var(--danger);">🔒 التعليقات مقفولة من قبل المدير</p></div>`;
         let html = `<div class="comments-area"><h3>💬 التعليقات</h3><div id="commentsList">`;
-        commentsList.forEach((com, idx) => { html += `<div class="comment"><strong>${escapeHtml(com.name)}</strong><p>${escapeHtml(com.text)}</p><small>${com.date}</small><button class="delete-btn" data-comment-idx="${idx}" style="margin-right:10px;"><i class="fas fa-trash"></i> حذف</button></div>`; });
+        commentsList.forEach((com, idx) => {
+            html += `<div class="comment"><strong>${escapeHtml(com.name)}</strong><p>${escapeHtml(com.text)}</p><small>${com.date}</small>`;
+            if(isAdmin) {
+                html += `<button class="delete-btn" data-comment-idx="${idx}" style="margin-right:10px;"><i class="fas fa-trash"></i> حذف</button>`;
+            }
+            html += `</div>`;
+        });
         html += `</div><textarea id="newCommentName" placeholder="اسمك" rows="1" style="width:30%"></textarea><textarea id="newCommentText" placeholder="تعليقك..." rows="3"></textarea><button id="submitCommentBtn" class="download-link-btn" style="background:var(--accent);">أضف تعليق</button></div>`;
         return html;
     }
@@ -721,10 +696,8 @@
             btn.addEventListener('click', (e) => {
                 const id = btn.getAttribute('data-id');
                 const type = btn.getAttribute('data-type');
-                if(confirm('حذف؟')) {
-                    if(type === 'video') deleteVideo(id);
-                    else if(type === 'download') deleteDownload(id);
-                }
+                if(type === 'video' && confirm('حذف هذا الفيديو؟')) deleteVideo(id);
+                else if(type === 'download' && confirm('حذف هذا الرابط؟')) deleteDownload(id);
                 const commentIdx = btn.getAttribute('data-comment-idx');
                 if(commentIdx !== null && confirm('حذف التعليق؟')) { commentsList.splice(parseInt(commentIdx), 1); saveComments(); loadTab(currentTab); }
             });
@@ -750,38 +723,40 @@
         attachEvents();
         attachRatingEvents();
         
-        if(tabId === "videos" && settings.allowAddVideos) {
-            document.getElementById("addVideoBtn")?.addEventListener("click", () => {
+        // ربط أحداث الإضافة فقط إذا كان المدير مسجل الدخول
+        if(isAdmin) {
+            const addVideoBtn = document.getElementById("addVideoBtn");
+            if(addVideoBtn) addVideoBtn.addEventListener("click", () => {
                 const title = document.getElementById("newVideoTitle").value;
                 const desc = document.getElementById("newVideoDesc").value;
                 const url = document.getElementById("newVideoUrl").value;
-                if(addVideo(title, desc, url)) { alert("✅ تم الإضافة"); loadTab("videos"); }
+                if(addVideo(title, desc, url)) { alert("✅ تم إضافة الفيديو"); loadTab("videos"); }
             });
-        }
-        if(tabId === "downloads-section" && settings.allowAddDownloads) {
-            document.getElementById("submitUploadBtn")?.addEventListener("click", () => {
+            const submitUpload = document.getElementById("submitUploadBtn");
+            if(submitUpload) submitUpload.addEventListener("click", () => {
                 const type = document.getElementById("uploadType").value;
                 const title = document.getElementById("uploadTitle").value;
                 const desc = document.getElementById("uploadDesc").value;
                 const link = document.getElementById("uploadLink").value;
-                if(addDownload(title, desc, type, link)) { alert("✅ تم الإضافة"); loadTab("downloads-section"); }
+                if(addDownload(title, desc, type, link)) { alert("✅ تم إضافة التحميل"); loadTab("downloads-section"); }
             });
         }
+        
         if(tabId === "about") {
             document.getElementById("revealEmailBtn")?.addEventListener("click", () => { document.getElementById("emailDisplay").innerHTML = "📧 abdulrahmanbashir573@gmail.com"; });
         }
         if(tabId === "contact") {
-            document.getElementById("contactForm")?.addEventListener("submit", (e) => { e.preventDefault(); document.getElementById("formMsg").innerHTML = "✅ تم الإرسال"; e.target.reset(); });
+            document.getElementById("contactForm")?.addEventListener("submit", (e) => { e.preventDefault(); document.getElementById("formMsg").innerHTML = "✅ تم إرسال رسالتك"; e.target.reset(); });
         }
-        document.getElementById("submitCommentBtn")?.addEventListener("click", () => {
+        const commentBtn = document.getElementById("submitCommentBtn");
+        if(commentBtn) commentBtn.addEventListener("click", () => {
             const name = document.getElementById("newCommentName")?.value.trim() || "زائر";
             const text = document.getElementById("newCommentText")?.value.trim();
             if(text && addComment(name, text)) loadTab(currentTab);
-            else if(!settings.allowComments) alert("التعليقات مقفولة");
         });
     }
     
-    // Settings Modal Logic
+    // ========== ADMIN MODAL LOGIC ==========
     const passwordModal = document.getElementById("passwordModal");
     const settingsModal = document.getElementById("settingsModal");
     const settingsBtn = document.getElementById("settingsBtn");
@@ -794,6 +769,7 @@
             passwordModal.style.display = "none";
             document.getElementById("passwordInput").value = "";
             document.getElementById("passwordError").style.display = "none";
+            setAdminSession(true);
             updateSettingsModal();
             settingsModal.style.display = "flex";
         } else {
@@ -802,20 +778,16 @@
     });
     
     function updateSettingsModal() {
-        updateToggleUI();
         document.getElementById("videosCountBox").innerHTML = `📹 عدد الفيديوهات: ${videosList.length}`;
         document.getElementById("downloadsCountBox").innerHTML = `📦 عدد روابط التحميل: ${downloadsList.length}`;
         document.getElementById("commentsCountBox").innerHTML = `💬 عدد التعليقات: ${commentsList.length}`;
         document.getElementById("statsBox").innerHTML = `⭐ عدد التقييمات المخزنة: ${Object.keys(localStorage).filter(k => k.startsWith("rating_")).length}`;
         
-        document.getElementById("toggleAddVideos").onclick = () => { settings.allowAddVideos = !settings.allowAddVideos; saveSettings(); updateSettingsModal(); loadTab(currentTab); };
-        document.getElementById("toggleAddDownloads").onclick = () => { settings.allowAddDownloads = !settings.allowAddDownloads; saveSettings(); updateSettingsModal(); loadTab(currentTab); };
-        document.getElementById("toggleComments").onclick = () => { settings.allowComments = !settings.allowComments; saveSettings(); updateSettingsModal(); loadTab(currentTab); };
-        document.getElementById("toggleRatings").onclick = () => { settings.allowRatings = !settings.allowRatings; saveSettings(); updateSettingsModal(); loadTab(currentTab); };
-        
-        document.getElementById("clearAllComments").onclick = () => { if(confirm("حذف كل التعليقات؟")) { commentsList = []; saveComments(); updateSettingsModal(); loadTab(currentTab); } };
-        document.getElementById("clearAllRatings").onclick = () => { if(confirm("حذف كل التقييمات؟")) { Object.keys(localStorage).filter(k => k.startsWith("rating_")).forEach(k => localStorage.removeItem(k)); updateSettingsModal(); loadTab(currentTab); } };
-        document.getElementById("resetAllData").onclick = () => { if(confirm("تحذير! سيتم حذف كل بيانات الموقع (فيديوهات، تحميلات، تعليقات، تقييمات). لا يمكن التراجع!")) { localStorage.clear(); location.reload(); } };
+        document.getElementById("clearAllVideos").onclick = () => { if(confirm("حذف كل الفيديوهات؟")) { deleteAllVideos(); updateSettingsModal(); } };
+        document.getElementById("clearAllDownloads").onclick = () => { if(confirm("حذف كل روابط التحميل؟")) { deleteAllDownloads(); updateSettingsModal(); } };
+        document.getElementById("clearAllComments").onclick = () => { if(confirm("حذف كل التعليقات؟")) { deleteAllComments(); updateSettingsModal(); } };
+        document.getElementById("resetAllData").onclick = () => { if(confirm("تحذير! سيتم حذف كل بيانات الموقع!")) resetAllData(); };
+        document.getElementById("logoutAdminBtn").onclick = () => { setAdminSession(false); closeModals(); alert("تم تسجيل الخروج، أدوات الإدارة اختفت"); };
     }
     
     function closeModals() {
@@ -836,7 +808,6 @@
     if(localStorage.getItem("darkMode") === "true") document.body.classList.add("dark");
     
     document.querySelectorAll(".nav-links a").forEach(link => { link.addEventListener("click", (e) => { e.preventDefault(); loadTab(link.getAttribute("data-tab")); window.scrollTo({ top: 0 }); }); });
-    document.getElementById("searchBtn").addEventListener("click", () => { alert("🔍 بحث"); });
     
     loadTab("home");
 </script>
