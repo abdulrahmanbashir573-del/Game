@@ -79,7 +79,7 @@
         }
         .logo-sub { font-size: 0.7rem; letter-spacing: 2px; color: var(--text-secondary); }
         .nav-links { display: flex; gap: 24px; flex-wrap: wrap; }
-        .nav-links a { color: var(--text-primary); font-weight: 500; }
+        .nav-links a { color: var(--text-primary); font-weight: 500; cursor: pointer; }
         .dark-toggle {
             background: var(--code-bg);
             border: none;
@@ -149,34 +149,6 @@
             border: 1px solid var(--border);
             border-radius: 20px;
         }
-        .toggle-switch {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 12px 0;
-        }
-        .toggle-input {
-            width: 50px;
-            height: 26px;
-            background: #cbd5e1;
-            border-radius: 30px;
-            position: relative;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .toggle-input.active { background: var(--success); }
-        .toggle-input:after {
-            content: '';
-            position: absolute;
-            width: 22px;
-            height: 22px;
-            background: white;
-            border-radius: 50%;
-            top: 2px;
-            left: 4px;
-            transition: 0.2s;
-        }
-        .toggle-input.active:after { left: 24px; }
         .danger-btn {
             background: var(--danger);
             color: white;
@@ -403,14 +375,14 @@
                 </div>
             </div>
             <div class="nav-links">
-                <a href="#" data-tab="home">الرئيسية</a>
-                <a href="#" data-tab="videos">🎬 فيديوهات</a>
-                <a href="#" data-tab="downloads-section">📦 تحميلات</a>
-                <a href="#" data-tab="programming">💻 برمجة</a>
-                <a href="#" data-tab="games">🎮 ألعاب</a>
-                <a href="#" data-tab="windows">🛠️ ويندوز</a>
-                <a href="#" data-tab="about">عنّي</a>
-                <a href="#" data-tab="contact">تواصل</a>
+                <a data-tab="home">الرئيسية</a>
+                <a data-tab="videos">🎬 فيديوهات</a>
+                <a data-tab="downloads-section">📦 تحميلات</a>
+                <a data-tab="programming">💻 برمجة</a>
+                <a data-tab="games">🎮 ألعاب</a>
+                <a data-tab="windows">🛠️ ويندوز</a>
+                <a data-tab="about">عنّي</a>
+                <a data-tab="contact">تواصل</a>
             </div>
             <button class="dark-toggle" id="darkModeToggle"><i class="fas fa-moon"></i></button>
         </div>
@@ -498,7 +470,6 @@
         isAdmin = admin;
         if(admin) sessionStorage.setItem("gamefixer_admin", "true");
         else sessionStorage.removeItem("gamefixer_admin");
-        // إعادة تحميل الصفحة الحالية لتحديث واجهة الإدارة
         loadTab(currentTab);
     }
     
@@ -571,7 +542,6 @@
         });
         html += `</div>`;
         
-        // لوحة إضافة فيديو - تظهر فقط للمدير
         if(isAdmin) {
             html += `<div class="admin-panel show" id="addVideoPanel">
                         <h3><i class="fab fa-youtube"></i> إضافة فيديو جديد</h3>
@@ -723,7 +693,6 @@
         attachEvents();
         attachRatingEvents();
         
-        // ربط أحداث الإضافة فقط إذا كان المدير مسجل الدخول
         if(isAdmin) {
             const addVideoBtn = document.getElementById("addVideoBtn");
             if(addVideoBtn) addVideoBtn.addEventListener("click", () => {
